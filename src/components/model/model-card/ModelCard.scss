@@ -1,0 +1,63 @@
+:root {
+  --card-shadow: 0 6px 22px rgba(0,0,0,.12);
+  --card-shadow-hover: 0 14px 32px rgba(0,0,0,.18);
+}
+
+.model-card {
+  position: relative;
+  display: grid;
+  border-radius: 15px;
+  background: var(--light-color);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+  cursor: pointer;
+
+  aspect-ratio: 7 / 10;
+
+  &:hover { transform: translateY(-3px); box-shadow: var(--card-shadow-hover); }
+  &:focus-visible { outline: 2px solid rgba(255,255,255,.6); outline-offset: 2px; }
+
+  &__media {
+    position: relative;
+    inset: 0;
+    isolation: isolate;
+  }
+
+  &__img {
+    object-fit: cover;
+    transform: scale(1.001);
+    transition: transform .5s ease;
+  }
+
+  &:hover &__img { transform: scale(1.04); }
+
+  &__overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: clamp(10px, 2.4vw, 18px);
+    color: var(--light-color);
+    background: rgba(0, 0, 0, 0.6);
+    display: grid;
+    gap: 4px;
+  }
+
+  &__title {
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.15;
+    font-size: clamp(16px, 2.2vw, 20px);
+    letter-spacing: .2px;
+  }
+
+  &__subtitle {
+    margin: 0;
+    opacity: .85;
+    line-height: 1.2;
+    font-size: clamp(12px, 1.7vw, 14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .model-card, .model-card * { transition: none !important; }
+}

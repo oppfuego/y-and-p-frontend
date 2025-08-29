@@ -1,0 +1,35 @@
+.model-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 1400px;
+  margin: 50px auto;
+
+  &__title {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary-color);
+    text-transform: uppercase;
+  }
+
+  &__grid {
+    display: grid;
+    gap: 20px;
+
+    /* Картки мають фіксований діапазон ширини і центровані */
+    grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+    justify-content: center;      /* центр по горизонталі */
+    justify-items: stretch;       /* картка розтягується в межах своєї колонки */
+  }
+}
+
+@media (min-width: 1600px) {
+  .model-catalog { max-width: 1680px; }
+  .model-catalog__grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+  }
+}
+
+/* щоб не роздувало ширину картки */
+.model-card { width: 100%; max-width: 360px; }

@@ -1,0 +1,45 @@
+.model-availability {
+  max-width: 1440px;
+  margin: 30px auto 50px;
+  padding: 0 20px;
+}
+
+.model-availability__title {
+  margin: 0 0 15px;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.model-availability__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 15px;
+}
+
+.model-availability__item {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .06);
+  display: grid;
+  gap: 10px;
+}
+
+.model-availability__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.model-availability__row span {
+  color: #666;
+}
+
+@media (max-width: 480px) {
+  .model-availability__row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
