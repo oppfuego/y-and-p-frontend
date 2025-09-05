@@ -1,6 +1,6 @@
 "use client";
 
-import Image, {type StaticImageData} from "next/image";
+import Image from "next/image";
 import {useEffect, useState, useCallback} from "react";
 import "./Lightbox.scss";
 import {IoMdClose} from "react-icons/io";

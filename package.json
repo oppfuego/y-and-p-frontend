@@ -6,21 +6,27 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "tsx src/utils/seed.ts"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^6.5.0",
     "@mui/material": "^6.5.0",
     "@mui/material-nextjs": "^7.3.0",
     "@mui/system": "^6.5.0",
+    "dotenv": "^17.2.2",
+    "mongodb": "^6.19.0",
+    "mongoose": "^8.18.0",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-icons": "^5.5.0",
     "sass": "^1.90.0",
-    "swiper": "^11.2.10"
+    "swiper": "^11.2.10",
+    "zod": "^4.1.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -29,6 +35,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
+    "tsx": "^4.20.5",
     "typescript": "^5"
   }
 }

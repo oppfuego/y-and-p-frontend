@@ -2,38 +2,88 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {canonCity} from "@/utils/availability";
 import "./StoryViewer.scss";
 import {Slide, StoryViewerProps} from "@/types/story-viewer";
 
 export default function StoryViewer({models, startModelIndex, onClose, city}: StoryViewerProps) {
+    const normalize = (raw?: string | { src: string }) => {
+        if (!raw) return "/images/placeholder.jpg";
+        const src = typeof raw === "string" ? raw : raw.src;
+        if (!src) return "/images/placeholder.jpg";
+        return !src.startsWith("http") && !src.startsWith("/") ? `/${src}` : src;
+    };
+    const isVideo = (s: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(s);
+
     const prepared = useMemo(() => {
-        return models.map(m => {
-            const uniq: string[] = [];
-            const push = (s?: any) => {
-                if (!s) return;
-                const src = typeof s === "string" ? s : s.src;
-                if (src && !uniq.includes(src)) uniq.push(src);
-            };
-            push(m.videoUrl);
-            push(m.photo);
-            (m.gallery ?? []).forEach(push);
-            const slides: Slide[] = uniq.map(src => ({type: src.endsWith(".mp4") ? "video" : "image", src}));
-            return {model: m, slides};
-        });
+        return models
+            .map((m) => {
+                const uniq: string[] = [];
+                const push = (s?: string | { src: string }) => {
+                    const src = normalize(s);
+                    if (src && !uniq.includes(src)) uniq.push(src);
+                };
+                if (m.videoUrl) push(m.videoUrl);
+                if (m.photo) push(m.photo);
+                (m.gallery ?? []).forEach(push);
+                const slides: Slide[] = uniq.map((src) => ({type: isVideo(src) ? "video" : "image", src}));
+                return {model: m, slides};
+            })
+            .filter((x) => x.slides.length > 0);
     }, [models]);
 
-    const [mi, setMi] = useState(Math.min(Math.max(0, startModelIndex), prepared.length - 1));
+    const [mi, setMi] = useState(0);
     const [si, setSi] = useState(0);
+
+    useEffect(() => {
+        const clampedMi = Math.min(Math.max(0, startModelIndex), Math.max(0, prepared.length - 1));
+        setMi(clampedMi);
+        setSi(0);
+    }, [prepared.length, startModelIndex]);
+
     const [progress, setProgress] = useState(0);
     const timerRef = useRef<number | null>(null);
 
-    const current = prepared[mi];
-    const total = current.slides.length;
-    const dur = current.slides[si]?.type === "video" ? 8000 : 4000;
+    const hasSlides = prepared.length > 0;
+    const current = hasSlides ? prepared[mi] : null;
+    const total = current?.slides.length ?? 0;
+    const dur = current?.slides[si]?.type === "video" ? 8000 : 4000;
+
+    const next = useCallback(() => {
+        if (!hasSlides || total === 0) {
+            onClose();
+            return;
+        }
+        setSi((prevSi) => {
+            if (prevSi + 1 < total) return prevSi + 1;
+            setMi((prevMi) => {
+                if (prevMi + 1 < prepared.length) return prevMi + 1;
+                onClose();
+                return prevMi;
+            });
+            return 0;
+        });
+    }, [hasSlides, total, prepared.length, onClose]);
+
+    const prev = useCallback(() => {
+        if (!hasSlides || total === 0) return;
+        setSi((prevSi) => {
+            if (prevSi > 0) return prevSi - 1;
+            setMi((prevMi) => {
+                if (prevMi > 0) {
+                    const prevSlides = prepared[prevMi - 1].slides.length;
+                    setSi(prevSlides - 1);
+                    return prevMi - 1;
+                }
+                return prevMi;
+            });
+            return prevSi;
+        });
+    }, [hasSlides, total, prepared]);
 
     useEffect(() => {
+        if (!hasSlides || total === 0) return;
         setProgress(0);
         if (timerRef.current) window.clearInterval(timerRef.current);
         const started = performance.now();
@@ -48,24 +98,7 @@ export default function StoryViewer({models, startModelIndex, onClose, city}: St
         return () => {
             if (timerRef.current) window.clearInterval(timerRef.current);
         };
-    }, [mi, si, dur]);
-
-    const next = () => {
-        if (si + 1 < total) setSi(si + 1);
-        else if (mi + 1 < prepared.length) {
-            setMi(mi + 1);
-            setSi(0);
-        } else onClose();
-    };
-
-    const prev = () => {
-        if (si > 0) setSi(si - 1);
-        else if (mi > 0) {
-            const prevSlides = prepared[mi - 1].slides.length;
-            setMi(mi - 1);
-            setSi(prevSlides - 1);
-        }
-    };
+    }, [mi, si, dur, next, hasSlides, total]);
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
@@ -80,10 +113,13 @@ export default function StoryViewer({models, startModelIndex, onClose, city}: St
             document.removeEventListener("keydown", onKey);
             document.body.style.overflow = prevOverflow;
         };
-    }, [mi, si]);
+    }, [next, prev, onClose]);
+
+    if (!hasSlides || !current) return null;
 
     const m = current.model;
     const slide = current.slides[si];
+    const cityForLink = canonCity(city ?? ((m as unknown as { city?: string }).city ?? ""));
 
     return (
         <div className="story" role="dialog" aria-modal="true" onClick={onClose}>
@@ -92,11 +128,16 @@ export default function StoryViewer({models, startModelIndex, onClose, city}: St
                     <div className="story__bars">
                         {current.slides.map((_, i) => (
                             <span key={i} className="story__bar">
-                <span className="story__bar-fill" style={{width: i < si ? "100%" : i === si ? `${progress}%` : "0%"}}/>
+                <span
+                    className="story__bar-fill"
+                    style={{width: i < si ? "100%" : i === si ? `${progress}%` : "0%"}}
+                />
               </span>
                         ))}
                     </div>
-                    <button className="story__close" type="button" aria-label="Close" onClick={onClose}>×</button>
+                    <button className="story__close" type="button" aria-label="Close" onClick={onClose}>
+                        ×
+                    </button>
                 </div>
 
                 <div className="story__media">
@@ -108,6 +149,7 @@ export default function StoryViewer({models, startModelIndex, onClose, city}: St
                                 fill
                                 sizes="(max-width: 768px) 90vw, 540px"
                                 priority
+                                unoptimized
                                 style={{objectFit: "contain"}}
                             />
                         ) : (
@@ -123,7 +165,7 @@ export default function StoryViewer({models, startModelIndex, onClose, city}: St
                     <div className="story__name">{m.name}</div>
                     <Link
                         className="story__link"
-                        href={`/city/${canonCity(city ?? m.city)}/model/${m.slug}`}
+                        href={`/city/${cityForLink}/model/${m.slug}`}
                         onClick={(e) => e.stopPropagation()}
                     >
                         Open profile

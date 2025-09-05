@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import './Header.scss';
 import Link from 'next/link';
 import Image from 'next/image';
-import Logo from '../../../assets/images/logo.svg';
+import Logo from '../../../../public/images/logo.svg';
 import { ImWhatsapp } from "react-icons/im";
 
 const Header = () => {

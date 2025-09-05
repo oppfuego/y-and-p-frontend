@@ -3,7 +3,14 @@
   flex-direction: column;
   gap: 30px;
   max-width: 1400px;
-  margin: 50px auto;
+  margin: 100px auto;
+
+  &--empty{
+    margin-top: 150px;
+    font-size: 20px;
+    color: #999;
+    text-align: center;
+  }
 
   &__title {
     font-size: clamp(24px, 4vw, 36px);
@@ -16,11 +23,16 @@
   &__grid {
     display: grid;
     gap: 20px;
-
-    /* Картки мають фіксований діапазон ширини і центровані */
     grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
-    justify-content: center;      /* центр по горизонталі */
-    justify-items: stretch;       /* картка розтягується в межах своєї колонки */
+    justify-content: center;
+    justify-items: stretch;
+  }
+
+  &__empty{
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 50px;
   }
 }
 
@@ -31,5 +43,4 @@
   }
 }
 
-/* щоб не роздувало ширину картки */
 .model-card { width: 100%; max-width: 360px; }

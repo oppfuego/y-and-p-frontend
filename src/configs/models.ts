@@ -1,18 +1,18 @@
 import type { StaticImageData } from "next/image";
-import AnastasiaCover from "@/assets/images/anastasia/anastasia-cover.jpg";
-import Anastasia2 from "@/assets/images/anastasia/anastasia-2.jpg";
-import Anastasia3 from "@/assets/images/anastasia/anastasia-3.jpg";
-import Anastasia4 from "@/assets/images/anastasia/anastasia-4.jpg";
-import Anastasia5 from "@/assets/images/anastasia/anastasia-5.jpg";
-import Anastasia6 from "@/assets/images/anastasia/anastasia-6.jpg";
+import AnastasiaCover from "../../public/images/anastasia/anastasia-cover.jpg";
+import Anastasia2 from "../../public/images/anastasia/anastasia-2.jpg";
+import Anastasia3 from "../../public/images/anastasia/anastasia-3.jpg";
+import Anastasia4 from "../../public/images/anastasia/anastasia-4.jpg";
+import Anastasia5 from "../../public/images/anastasia/anastasia-5.jpg";
+import Anastasia6 from "../../public/images/anastasia/anastasia-6.jpg";
 
-import DanielaCover from "@/assets/images/daniela/daniela-cover.jpg";
-import Daniela2 from "@/assets/images/daniela/daniela-2.jpg";
-import Daniela3 from "@/assets/images/daniela/daniela-3.jpg";
-import Daniela4 from "@/assets/images/daniela/daniela-4.jpg";
-import Daniela5 from "@/assets/images/daniela/daniela-5.jpg";
-import Daniela6 from "@/assets/images/daniela/daniela-6.jpg";
-import Daniela7 from "@/assets/images/daniela/daniela-7.jpg";
+import DanielaCover from "../../public/images/daniela/daniela-cover.jpg";
+import Daniela2 from "../../public/images/daniela/daniela-2.jpg";
+import Daniela3 from "../../public/images/daniela/daniela-3.jpg";
+import Daniela4 from "../../public/images/daniela/daniela-4.jpg";
+import Daniela5 from "../../public/images/daniela/daniela-5.jpg";
+import Daniela6 from "../../public/images/daniela/daniela-6.jpg";
+import Daniela7 from "../../public/images/daniela/daniela-7.jpg";
 
 export type ModelStats = {
     height?: string;
@@ -82,8 +82,8 @@ export const MODELS: ModelDetail[] = [
             { type: "outcall", duration: "2h", price: "500€ + taxi" },
         ],
         availability: [
-            { city: "Milano", dateRangeText: "15/08–30/08", address: "Via Gaudenzio Ferrari, 9/A" },
-            { city: "Roma", dateRangeText: "22/08–30/08", address: "Via Giacomo Giri, 7" },
+            { city: "Milano", dateRangeText: "01/09–30/12", address: "Via Gaudenzio Ferrari, 9/A" },
+            { city: "Roma", dateRangeText: "01/09–30/12", address: "Via Giacomo Giri, 7" },
         ],
         services: [
             "French kiss",
@@ -105,7 +105,7 @@ export const MODELS: ModelDetail[] = [
     {
         id: "2",
         slug: "daniela-d1",
-        city: "milan",
+        city: "rome",
         name: "Anastasia",
         photo: DanielaCover,
         about: "Young, elegant, passionate. International model. Based in Milan.",
@@ -122,8 +122,8 @@ export const MODELS: ModelDetail[] = [
             { type: "outcall", duration: "2h", price: "500€ + taxi" },
         ],
         availability: [
-            { city: "Milano", dateRangeText: "15/08–30/08", address: "Via Gaudenzio Ferrari, 9/A" },
-            { city: "Roma", dateRangeText: "22/08–30/08", address: "Via Giacomo Giri, 7" },
+            { city: "Milano", dateRangeText: "01/09–30/12", address: "Via Gaudenzio Ferrari, 9/A" },
+            { city: "Roma", dateRangeText: "01/09–30/12", address: "Via Giacomo Giri, 7" },
         ],
         services: [
             "French kiss",

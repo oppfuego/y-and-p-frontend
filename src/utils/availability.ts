@@ -6,6 +6,7 @@ export const canonCity = (v?: string) => {
 };
 
 export const parseRange = (text: string) => {
+    if (typeof text !== "string") return null;
     const t = text.replace(/\s+/g, "");
     const m = t.match(/^(\d{1,2})[./-](\d{1,2})[–-](\d{1,2})[./-](\d{1,2})$/i);
     if (!m) return null;
@@ -15,15 +16,18 @@ export const parseRange = (text: string) => {
     return { start, end };
 };
 
-export const isAvailableNow = (availability?: { city: string; dateRangeText: string }[], city?: string) => {
-    if (!availability?.length) return false;
-    const now = new Date();
-    const cityKey = canonCity(city);
-    return availability.some(a => {
-        const aKey = canonCity(a.city);
-        if (cityKey && aKey && aKey !== cityKey) return false;
-        const r = parseRange(a.dateRangeText);
-        if (!r) return false;
-        return now >= r.start && now <= r.end;
-    });
+export const isAvailableNow = (
+  availability?: { city: string; startDate: string; endDate: string }[],
+  city?: string
+) => {
+  if (!availability?.length) return false;
+  const now = new Date();
+  const cityKey = canonCity(city);
+  return availability.some(a => {
+    const aKey = canonCity(a.city);
+    if (cityKey && aKey && aKey !== cityKey) return false;
+    const start = new Date(a.startDate);
+    const end = new Date(a.endDate);
+    return now >= start && now <= end;
+  });
 };

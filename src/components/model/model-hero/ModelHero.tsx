@@ -2,8 +2,8 @@ import Image from "next/image";
 import "./ModelHero.scss";
 import {ModelHeroProps} from "@/types/model-hero";
 
-export default function ModelHero({ model, city }: ModelHeroProps) {
-    const { name, photo, stats, about, slug } = model;
+export default function ModelHero({ model }: ModelHeroProps) {
+    const { name, photo, stats, about } = model;
 
     return (
         <div className="model-hero">

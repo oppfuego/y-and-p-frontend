@@ -1,19 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import { MODELS } from "@/configs/models";
-import { isAvailableNow, canonCity } from "@/utils/availability";
+import {useEffect, useState} from "react";
 import StoryViewer from "../story-viewer/StoryViewer";
 import "./Stories.scss";
 
-export default function Stories({ city }: { city?: string }) {
-    const items = useMemo(
-        () => MODELS.filter(m => isAvailableNow(m.availability, city) && (!city || canonCity(m.city) === canonCity(city))),
-        [city]
-    );
+type ApiModelListItem = {
+    _id?: string;
+    slug: string;
+    name: string;
+    photo?: string;
+    gallery?: string[];
+    city?: string;
+    videoUrl?: string;
+    availability?: { city: string; startDate: string; endDate: string }[];
+};
+
+export default function Stories({city}: { city?: string }) {
+    const [items, setItems] = useState<ApiModelListItem[]>([]);
     const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        const run = async () => {
+            const qs = new URLSearchParams({available: "now", limit: "24"});
+            if (city) qs.set("city", city);
+            const res = await fetch(`/api/models/get-list?${qs.toString()}`, {cache: "no-store"});
+            if (!res.ok) {
+                setItems([]);
+                return;
+            }
+            const data = await res.json();
+            setItems(Array.isArray(data) ? data : []);
+        };
+        run();
+    }, [city]);
+
     if (!items.length) return null;
+
+    const normalize = (s?: string) =>
+        !s ? "/images/placeholder.jpg"
+            : (s.startsWith("http") || s.startsWith("/")) ? s : `/${s}`;
 
     return (
         <>
@@ -22,7 +48,7 @@ export default function Stories({ city }: { city?: string }) {
                 <div className="stories__container" role="list">
                     {items.map((m, idx) => (
                         <button
-                            key={m.id}
+                            key={m.slug || m._id || idx}
                             type="button"
                             className="stories__item"
                             role="listitem"
@@ -32,12 +58,12 @@ export default function Stories({ city }: { city?: string }) {
               <span className="stories__ring">
                 <span className="stories__thumb">
                   <Image
-                      src={m.photo}
+                      src={normalize(m.photo)}
                       alt={m.name}
                       fill
-                      sizes="(max-width: 768px) 80px, 100px"
-                      style={{ objectFit: "cover" }}
-                      priority
+                      sizes="80px"
+                      style={{objectFit: "cover"}}
+                      unoptimized
                   />
                 </span>
               </span>
@@ -49,7 +75,15 @@ export default function Stories({ city }: { city?: string }) {
 
             {openIndex !== null && (
                 <StoryViewer
-                    models={items}
+                    models={items.map(m => ({
+                        id: m.slug || m._id || "",
+                        slug: m.slug,
+                        name: m.name,
+                        photo: normalize(m.photo),
+                        videoUrl: m.videoUrl ? normalize(m.videoUrl) : undefined,
+                        gallery: (m.gallery?.length ? m.gallery : [m.photo]).map(normalize),
+                        city: (m.city ?? m.availability?.[0]?.city ?? city ?? ""),
+                    }))}
                     startModelIndex={openIndex}
                     onClose={() => setOpenIndex(null)}
                     city={city}

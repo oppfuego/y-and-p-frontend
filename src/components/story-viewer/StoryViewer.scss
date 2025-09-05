@@ -92,3 +92,7 @@
   .story__wrap { width: 100vw; height: 100vh; border-radius: 0; padding: 10px; }
   .story__box { width: 90vw; height: 75vh; }
 }
+
+.stories__thumb { position: relative; width: 80px; height: 80px; border-radius: 9999px; overflow: hidden; }
+.story__box    { position: relative; width: min(90vw, 540px); aspect-ratio: 9/16; margin: 0 auto; background: #000; }
+

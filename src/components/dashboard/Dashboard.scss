@@ -1,0 +1,60 @@
+.dashboard {
+  width: 100%;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+
+  &__header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  &__title {
+    font-size: 45px;
+    color: var(--main-text-color);
+  }
+
+  &__subtitle {
+    font-size: 20px;
+    color: var(--secondary-text-color);
+  }
+
+  &__available-container {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+  }
+
+  &__available-card {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 250px;
+    background-color: var(--primary-color);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__available-title {
+    font-size: 20px;
+    color: var(--background);
+  }
+
+  &__text {
+    font-size: 20px;
+    color: var(--background);
+  }
+}
+

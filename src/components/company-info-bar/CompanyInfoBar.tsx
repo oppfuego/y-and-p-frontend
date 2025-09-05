@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import "./CompanyInfoBar.scss";
-import BannerImage from "../../assets/images/banner-image.png";
+import BannerImage from "../../../public/images/banner-image.png";
 
 export default function CompanyInfoBar() {
     return (
